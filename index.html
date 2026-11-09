@@ -1,0 +1,148 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Редактор карточек товаров</title><style>html{color-scheme:light dark}</style></head><body>
+<div id="parts-editor">
+<style>
+#parts-editor{--paper:light-dark(#fff,#20252b);--ink:light-dark(#263544,#e4eaf0);--line:light-dark(#dce3e9,#434d58);--soft:light-dark(#f1f5f8,#282f38);--blue:light-dark(#176bc0,#80baff);font:14px/1.45 Arial,sans-serif;color:var(--ink);background:var(--soft);padding:22px;border-radius:12px}#parts-editor *{box-sizing:border-box}#parts-editor header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding-right:80px;margin-bottom:22px}#parts-editor h2{font-size:21px;margin:0}#parts-editor h3{font-size:18px;margin:0 0 4px}#parts-editor .sub{opacity:.65;font-size:12px}#parts-editor .columns{display:grid;grid-template-columns:1fr 1fr;gap:22px}#parts-editor .pane{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}#parts-editor .bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:15px 0 8px}#parts-editor label.field{display:block;margin:12px 0}#parts-editor input[type=text],#parts-editor select,#parts-editor textarea{font:inherit;color:inherit;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px;width:100%;margin-top:5px}#parts-editor button{font:inherit;color:var(--blue);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px 11px;cursor:pointer}#parts-editor button.primary{background:var(--blue);color:light-dark(#fff,#102033);border-color:var(--blue)}#parts-editor .items{border:1px solid var(--line);border-radius:7px;min-height:146px;padding:5px;background:var(--paper)}#parts-editor .item{display:flex;gap:9px;align-items:center;padding:8px;border-radius:4px;cursor:grab}#parts-editor .item:has(input:checked){background:var(--soft);color:var(--blue)}#parts-editor .item span{flex:1}#parts-editor .item button{border:0;padding:0 6px}#parts-editor .hint{opacity:.6;font-size:12px;padding:10px}#parts-editor .drop.over{outline:2px dashed var(--blue);background:var(--soft)}#parts-editor .foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}#parts-editor #notice{margin-top:15px;min-height:22px;color:var(--blue)}#parts-editor .code{font-family:monospace;font-size:12px}#parts-editor .params{display:flex;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;margin-top:16px}#parts-editor .idline{display:flex;align-items:end;gap:8px}#parts-editor .idline label{flex:1}#parts-editor .idline input{margin:0}#parts-editor textarea{resize:vertical;min-height:65px}@media(max-width:650px){#parts-editor .columns{grid-template-columns:1fr}#parts-editor{padding:12px}}
+#parts-editor .item.used,#parts-editor .item.used:has(input:checked){background:light-dark(#dff3e5,#244635);color:light-dark(#185b32,#b9f0cb);margin:3px 0}#parts-editor .usage{font-size:11px;opacity:.85;max-width:110px;text-align:right}#parts-editor .sort-setting{display:block;margin:16px 0 4px}
+#parts-editor .compact-fields{display:grid;gap:5px;margin-top:12px}#parts-editor .copy-row{display:flex;align-items:flex-start;gap:8px}#parts-editor .copy-row input,#parts-editor .copy-row textarea{flex:1;min-width:0;margin:0}#parts-editor .copy-row textarea{min-height:64px}#parts-editor .copy-row .copy-button{flex:0 0 38px;min-height:38px;display:grid;place-items:center;padding:9px}#parts-editor .compact-fields .code{opacity:.7;margin-bottom:2px}
+#parts-editor .one-c-layout{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:10px}#parts-editor .one-c{margin-top:12px;border:1px solid var(--line);border-radius:7px;padding:8px;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:space-between;background:var(--soft)}#parts-editor .one-c-head{display:flex;align-items:center;gap:8px}#parts-editor .one-c-head input{appearance:none;width:28px;height:16px;border-radius:12px;background:var(--line);position:relative;margin:0}#parts-editor .one-c-head input:checked{background:var(--blue)}#parts-editor .one-c-head input:before{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--paper)}#parts-editor .one-c-head input:checked:before{left:14px}#parts-editor #one-c-copy{font-size:12px;width:100%;padding:10px 2px}#parts-editor .stage-red{background:light-dark(#fbe1df,#653333);color:light-dark(#8e2720,#ffd5d1)}#parts-editor .stage-yellow{background:light-dark(#fff0bf,#655520);color:light-dark(#6c4c00,#ffe7a0)}#parts-editor .stage-green{background:light-dark(#dff3e5,#244635);color:light-dark(#185b32,#b9f0cb)}#parts-editor #one-c-copy:disabled{opacity:.5}#parts-editor #one-c-status{font-size:11px;text-align:center}
+#parts-editor .one-c{padding:6px;gap:8px;justify-content:flex-start}#parts-editor #one-c-copy{width:100%;aspect-ratio:1;height:auto;min-height:0;border-radius:0;padding:5px;font-size:13px;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere}#parts-editor #one-c-copy.stage-red{background:light-dark(#e52e36,#ef3942);color:#fff;border-color:light-dark(#c91b24,#ff6269)}
+#parts-editor .one-c{display:grid;grid-template-rows:auto 1fr auto;justify-items:center;align-items:center;gap:8px;padding:8px 6px}#parts-editor #one-c-copy{border-radius:6px;align-self:center}#parts-editor .one-c-head{align-self:start}#parts-editor #one-c-status{align-self:end}
+#parts-editor .one-c{grid-template-columns:minmax(0,1fr);padding-inline:6px;min-width:0;width:100%}#parts-editor #one-c-copy{box-sizing:border-box;justify-self:center;margin-inline:0;width:100%;min-width:0;max-width:100%}
+#parts-editor .copy-row select{flex:1;min-width:0;margin:0}
+</style>
+<header><h2>Редактор карточек товаров</h2><span class="sub">Демонстрационный макет · без подключения к Битрикс</span></header>
+<div class="columns">
+<section class="pane"><h3>Основная карточка</h3><div class="sub">Полные данные запчасти · источник</div>
+<label class="field">Артикул<input type="text" id="article" aria-label="Артикул" value="CL068AS" placeholder="Введите артикул"></label>
+<div class="sub">ID основной карточки: <b>118640</b> · Внутренний код: 118640</div><p>Крышка матрицы Asus · синяя · пластик</p>
+<label class="sort-setting"><input type="checkbox" id="used-last"> Использованные — в конец</label><div class="sub">Для моделей и партномеров · порядок меняется после сохранения</div><div class="bar"><strong>Модели ноутбуков</strong><span class="sub">А → Я · 8 моделей</span></div><div class="items" id="source-models"></div><div class="bar"><span class="sub" id="count-models">Выбрано: 0</span><button data-all="models">Перенести все →</button></div>
+<div class="bar"><strong>Партномера</strong><span class="sub">А → Я · 3 партномера</span></div><div class="items" id="source-parts"></div><div class="bar"><span class="sub" id="count-parts">Выбрано: 0</span><button data-all="parts">Перенести все →</button></div>
+<details open style="margin-top:18px"><summary>Параметры основной карточки</summary><div class="params"><span>Бренд ноутбука: <b>Asus</b></span><span>Материал: <b>пластик</b></span><span>Цвет: <b>синий</b></span></div></details>
+</section>
+<section class="pane"><h3>Витринная карточка</h3><div class="sub">Состав и свойства отдельной карточки</div>
+<div class="bar"><label for="type">Тип карточки</label><select id="type" aria-label="Тип карточки" style="width:auto;margin:0"><option value="direct">Прямая</option><option value="reverse">Обратная</option></select></div>
+<div class="one-c-layout"><div class="compact-fields">
+<label for="card-id">ID карточки</label>
+<div class="copy-row"><select id="card-id" aria-label="ID витринной карточки"><option>i01</option><option>i02</option><option>i03</option><option>i08</option></select><button id="open">Открыть</button></div>
+<span class="code" id="full-id">CL068ASi01</span>
+<label for="title">Название</label>
+<div class="copy-row"><textarea id="title" aria-label="Название карточки"></textarea></div>
+</div><aside class="one-c"><label class="one-c-head">1С <input type="checkbox" role="switch" id="one-c-enabled" checked aria-label="Режим 1С"></label><button id="one-c-copy" class="stage-red">Название</button><small id="one-c-status" aria-live="polite">1 из 2</small></aside></div><label class="field">Внешний код<input type="text" value="118640" id="external-code" aria-label="Внешний код — ID основной карточки"><span class="sub">Автоматически из основной карточки · можно изменить</span></label><div class="bar"><strong>Модели ноутбуков</strong><span class="sub" id="target-count-models"></span></div><div class="items drop" data-kind="models" id="target-models"></div>
+<div class="bar"><strong>Партномера</strong><span class="sub" id="target-count-parts"></span></div><div class="items drop" data-kind="parts" id="target-parts"></div>
+<div class="params"><label style="width:100%">Бренд ноутбука<select id="brand" aria-label="Бренд конкретной витринной карточки"><option>Asus</option><option>Acer</option><option>Apple</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option></select><span class="sub" id="brand-note">Из основной карточки · Asus</span></label></div><details style="margin-top:14px"><summary>Остальные параметры</summary><div class="params"><span>Материал: <b>пластик</b></span><span>Цвет: <b>синий</b></span></div></details>
+<div class="foot"><button class="primary" id="save">Сохранить изменения</button><button id="new">+ Новая карточка</button></div>
+</section></div><div id="notice" role="status" aria-live="polite">Выделите элементы галочками и перетащите группу в соответствующее окно справа.</div>
+<script>
+(()=>{const root=document.getElementById('parts-editor'),q=s=>root.querySelector(s);const data={models:['Asus F415EA','Asus M409FA','Asus M415UA','Asus R465EA','Asus VivoBook X415EA','Asus VivoBook X415JA','Asus VivoBook X415JF','Asus VivoBook X415MA'],parts:['13NB0ST3P01013','47XKPLCJN00','90NB0ST3-R7A010']};let cards={i01:{models:['Asus F415EA','Asus R465EA','Asus VivoBook X415JF'],parts:['90NB0ST3-R7A010'],type:'direct'},i02:{models:['Asus M409FA'],parts:['47XKPLCJN00'],type:'direct'},i03:{models:['Asus M415UA'],parts:[],type:'direct'},i08:{models:[],parts:['90NB0ST3-R7A010'],type:'reverse'}},id='i01',current=structuredClone(cards.i01),drag=null;const selected={models:new Set(),parts:new Set()};const msg=t=>q('#notice').textContent=t;
+let article='CL068AS';q('#article').onchange=e=>{article=e.target.value.trim();render();msg('Введён артикул '+article+'. В макете показаны демонстрационные данные; загрузка из Битрикс не подключена.')};const alphabetical=(a,b)=>a.localeCompare(b,'ru',{numeric:true});
+const appliedOrder={models:[...data.models].sort(alphabetical),parts:[...data.parts].sort(alphabetical)};
+function usage(kind,value,savedOnly=false){
+ const ids=Object.keys(cards).filter(key=>(!savedOnly&&key===id?current:cards[key])[kind].includes(value));
+ if(!savedOnly&&!cards[id]&&current[kind].includes(value))ids.push(id);
+ return ids.sort((a,b)=>Number(a.slice(1))-Number(b.slice(1)));
+}
+function highlight(){
+ for(const kind of ['models','parts']){
+  const box=q('#source-'+kind);
+  for(const row of box.children){
+   const ids=usage(kind,row.dataset.value);
+   row.classList.toggle('used',ids.length>0);
+   row.querySelector('.usage').textContent=ids.length?'✓ '+ids.join(', '):'';
+  }
+ }
+}
+function applySavedOrder(){
+ for(const kind of ['models','parts']){
+  appliedOrder[kind]=[...data[kind]].sort((a,b)=>q('#used-last').checked?(Number(usage(kind,a,true).length>0)-Number(usage(kind,b,true).length>0)||(Number(usage(kind,a,true)[0]?.slice(1)||0)-Number(usage(kind,b,true)[0]?.slice(1)||0))||alphabetical(a,b)):alphabetical(a,b));
+  const box=q('#source-'+kind);
+  for(const value of appliedOrder[kind])box.append([...box.children].find(row=>row.dataset.value===value));
+ }
+}
+function title(){q('#title').value=current.title|| (current.type==='direct'?'Крышка матрицы для ноутбука '+(current.models[0]||'…')+' синяя (пластик)':'Крышка матрицы '+(current.parts[0]||'…')+' для ноутбука Asus синяя (пластик)')}
+function render(){const picker=q('#card-id');picker.replaceChildren();[...new Set([...Object.keys(cards),...Object.keys(drafts),id])].sort((a,b)=>Number(a.slice(1))-Number(b.slice(1))).forEach(key=>{const option=document.createElement('option');option.value=key;option.textContent=key+(cards[key]?'':' · черновик');picker.append(option)});picker.value=id;if(typeof resetOneC==='function')resetOneC();for(const kind of ['models','parts']){const box=q('#target-'+kind);box.replaceChildren();[...current[kind]].sort((a,b)=>a.localeCompare(b,'ru',{numeric:true})).forEach(v=>{const row=document.createElement('div');row.className='item';const span=document.createElement('span');span.textContent=v;const b=document.createElement('button');b.textContent='×';b.setAttribute('aria-label','Удалить '+v);b.onclick=()=>{current[kind]=current[kind].filter(x=>x!==v);delete current.title;render()};row.append(span,b);box.append(row)});if(!current[kind].length)box.innerHTML='<div class="hint">Перетащите сюда '+(kind==='models'?'модели ноутбуков':'партномера')+'</div>';q('#target-count-'+kind).textContent=current[kind].length+' добавлено'}q('#full-id').textContent=article+id;q('#external-code').value=current.externalCode||'118640';highlight();q('#type').value=current.type;q('#brand').value=current.brand||'Asus';q('#brand-note').textContent=(current.brand&&current.brand!=='Asus')?'Изменён только для '+article+id:'Из основной карточки · Asus';title()}
+function add(kind,values){const old=current[kind].length;current[kind]=[...new Set([...current[kind],...values])];delete current.title;render();msg('Добавлено: '+(current[kind].length-old)+'. Уже присутствовало: '+(values.length-(current[kind].length-old))+'.')}
+for(const kind of ['models','parts']){data[kind].sort((a,b)=>a.localeCompare(b,'ru',{numeric:true})).forEach(v=>{const row=document.createElement('label');row.className='item';row.draggable=true;row.dataset.value=v;const cb=document.createElement('input');cb.type='checkbox';cb.onchange=()=>{cb.checked?selected[kind].add(v):selected[kind].delete(v);q('#count-'+kind).textContent='Выбрано: '+selected[kind].size};const span=document.createElement('span');span.textContent=v;const badge=document.createElement('small');badge.className='usage';row.append(cb,span,badge);row.ondragstart=e=>{drag={kind,values:selected[kind].has(v)?[...selected[kind]]:[v]};e.dataTransfer.setData('text/plain',JSON.stringify(drag));e.dataTransfer.effectAllowed='copy'};q('#source-'+kind).append(row)});const target=q('#target-'+kind);target.ondragover=e=>{e.preventDefault();target.classList.add('over')};target.ondragleave=()=>target.classList.remove('over');target.ondrop=e=>{e.preventDefault();target.classList.remove('over');if(!drag)return;if(drag.kind!==kind){msg(kind==='parts'?'Это модели ноутбуков. Перетащите их в поле «Модели».':'Это партномера. Перетащите их в поле «Партномера».');return}add(kind,drag.values);drag=null};q('[data-all="'+kind+'"]').onclick=()=>add(kind,data[kind])}
+q('#used-last').onchange=()=>msg('Настройка применится к обоим спискам после сохранения карточки.');q('#external-code').oninput=e=>current.externalCode=e.target.value;q('#brand').onchange=e=>{current.brand=e.target.value;render();msg('Бренд изменён только в '+article+id+'. Нажмите «Сохранить изменения».')};async function copyValue(value,label){
+ try{
+  if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value)}
+  else{
+   const helper=document.createElement('textarea');helper.value=value;root.append(helper);helper.select();
+   const ok=document.execCommand('copy');helper.remove();if(!ok)throw new Error('copy unavailable');
+  }
+  msg(label+' скопирован'+(label==='Название'?'о':'')+': '+value);return true;
+ }catch(error){msg('Буфер обмена недоступен в этом просмотре. Выделите значение и нажмите Ctrl+C.');return false}
+}
+
+
+let copyStage=0,copyBusy=false,cycle=0;const drafts={};let copiedSnapshot=null;
+function paintOneC(){
+ const button=q('#one-c-copy'),enabled=q('#one-c-enabled').checked;
+ button.className=copyStage===0?'stage-red':copyStage===1?'stage-yellow':'stage-green';
+ button.textContent=copyStage===0?'Название':copyStage===1?'Артикул + ID':'✓ Готово';
+ button.disabled=!enabled||copyBusy;
+ q('#one-c-status').textContent=!enabled?'Выключено':copyStage===2?'Переход…':copyStage===0?'1 из 2':'2 из 2';
+}
+function resetOneC(){copyStage=0;copyBusy=false;copiedSnapshot=null;cycle++;paintOneC()}
+q('#one-c-enabled').onchange=resetOneC;
+q('#one-c-copy').onclick=async()=>{
+ if(copyBusy||!q('#one-c-enabled').checked)return;
+ const token=cycle;copyBusy=true;paintOneC();
+ if(copyStage===0){
+  const snapshot={id,article,title:q('#title').value};
+  const ok=await copyValue(snapshot.title,'Название');
+  if(token!==cycle)return;
+  copyBusy=false;if(ok){copiedSnapshot=snapshot;copyStage=1}paintOneC();return;
+ }
+ const snapshot=copiedSnapshot;
+ const ok=await copyValue(snapshot.article+snapshot.id,'Артикул с ID');
+ if(token!==cycle)return;
+ if(!ok){copyBusy=false;paintOneC();return}
+ copyStage=2;paintOneC();
+ setTimeout(()=>{
+  if(token!==cycle)return;
+  drafts[id]=structuredClone(current);
+  const next='i'+String(Number(snapshot.id.slice(1))+1).padStart(2,'0');
+  id=next;current=structuredClone(drafts[id]||cards[id]||{models:[],parts:[],type:'direct',brand:'Asus',externalCode:'118640'});
+  q('#card-id').value=id;render();
+  msg('Скопирован '+snapshot.article+snapshot.id+'. Открыт '+article+id+(cards[id]?'': ' — новый черновик')+'. Предыдущие изменения сохранены в памяти макета.');
+ },900);
+};
+q('#type').onchange=e=>{current.type=e.target.value;delete current.title;render()};q('#title').oninput=e=>current.title=e.target.value;q('#save').onclick=()=>{cards[id]=structuredClone(current);applySavedOrder();highlight();msg('Карточка '+article+id+' сохранена в демонстрационном макете.')};function open(){const key=q('#card-id').value.trim().replace(/^CL068AS/,'');if(!cards[key]&&!drafts[key])return;drafts[id]=structuredClone(current);id=key;current=structuredClone(drafts[id]||cards[id]);render();msg('Открыта карточка '+article+id)}q('#open').onclick=open;q('#card-id').onchange=open;q('#card-id').onkeydown=e=>{if(e.key==='Enter')open()};q('#new').onclick=()=>{const next=Math.max(...Object.keys(cards).map(k=>Number(k.slice(1))))+1;id='i'+String(next).padStart(2,'0');current={models:[],parts:[],type:'direct'};cards[id]=structuredClone(current);q('#card-id').value=id;render();msg('Создана новая карточка '+article+id)};render();
+for(const kind of ['models','parts']){
+ const source=q('#source-'+kind),heading=source.previousElementSibling.querySelector('.sub');
+ const controls=document.createElement('div');controls.className='bar';
+ const input=document.createElement('input');input.type='text';input.placeholder=kind==='models'?'Новая модель ноутбука':'Новый партномер';input.setAttribute('aria-label',input.placeholder);input.style.flex='1';input.style.minWidth='130px';input.style.width='auto';
+ const button=document.createElement('button');button.textContent='Добавить';
+ controls.append(input,button);source.nextElementSibling.after(controls);
+ function create(){
+  const value=input.value.trim().replace(/s+/g,' ');
+  if(!value){msg('Введите '+(kind==='models'?'модель ноутбука.':'партномер.'));return}
+  if(data[kind].some(v=>v.toLocaleLowerCase()===value.toLocaleLowerCase())){msg('Такой элемент уже есть в основной карточке.');return}
+  data[kind].push(value);
+  const row=document.createElement('label');row.className='item';row.draggable=true;row.dataset.value=value;
+  const cb=document.createElement('input');cb.type='checkbox';cb.onchange=()=>{cb.checked?selected[kind].add(value):selected[kind].delete(value);q('#count-'+kind).textContent='Выбрано: '+selected[kind].size};
+  const span=document.createElement('span');span.textContent=value;const badge=document.createElement('small');badge.className='usage';row.append(cb,span,badge);
+  row.ondragstart=e=>{drag={kind,values:selected[kind].has(value)?[...selected[kind]]:[value]};e.dataTransfer.setData('text/plain',JSON.stringify(drag));e.dataTransfer.effectAllowed='copy'};
+  source.append(row);
+  const rows=[...source.children];
+  const before=rows.find(el=>el!==row&&(!usage(kind,el.dataset.value,true).length||!q('#used-last').checked)&&alphabetical(value,el.dataset.value)<0);
+  if(before)source.insertBefore(row,before);
+  heading.textContent='А → Я · '+data[kind].length+' '+(kind==='models'?'моделей':'партномеров');
+  input.value='';highlight();msg('Добавлено в основную карточку: '+value+'. Можно перетаскивать в витринные. В макете изменения хранятся до перезагрузки.');
+ }
+ button.onclick=create;input.onkeydown=e=>{if(e.key==='Enter')create()};
+}
+})();
+</script></div>
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
